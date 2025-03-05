@@ -92,5 +92,133 @@ int main (int arg_count, char **arg_array){
   */
  void input_parse(char *input, char **arguments, int *background){
     int i =0;
+    char *tok;
+
+    tok =strtok(input, "\t");
+    //while loop to store token in the argument array
+    while (tok !=NULL && i<max_arg-1){
+        arguments[i++] = tok;
+        tok= strtok(NULL, "\t");
+    }
+
+    //Now need to check if the last is & to see for background processes
+    if (i>0 && strcmp(arguments[i-1], "&")==0){
+        *background =1; //backround flag
+        arguments[i-1]=NULL;//remove it from arguments
+    }else{
+        arguments[i]=NULL;
+    }
+
+
+    }
+
+ /**
+  * Now we are focusing on the built in shell commands 
+  * 
+  * @param arguments (this is an array of command arguments)
+  * @return this returns 1 if the command was built in and completed
+  *         if it doesn't then it will return 0
+  */
+ int built_in(char **arguments){
+    //check if the command is built in
+    if (strcmp(arguments[0],"exit")==0){
+        exit(0);
+        return 1;
+    }else if (strcmp(arguments[0],"pid")==0){
+        printf("%d\n",getpid());
+        return 1;
+    } else if (strcmp(arguments[0], "ppid") == 0) {
+        printf("%d\n", getppid());   // Print parent's process ID
+        return 1;
+    } else if (strcmp(arguments[0], "pwd") == 0) {
+        char cwd[max_in];
+        if (getcwd(cwd, sizeof(cwd)) != NULL) {
+            printf("%s\n", cwd);     // Print current working directory
+        } else {
+            perror("getcwd");        // Error getting directory
+        }
+        return 1;
+    } else if (strcmp(arguments[0], "cd") == 0) {
+        if (arguments[1] == NULL) {
+            // No argument, change to HOME directory
+            char *home = getenv("HOME");
+            if (home != NULL) {
+                if (chdir(home) != 0) {
+                    perror("chdir");
+                }
+            }
+        } else {
+            // Change to specified directory
+            if (chdir(arguments[1]) != 0) {
+                perror("chdir");
+            }
+        }
+        return 1;
+    }
     
- }
+    // Not a built-in command
+    return 0;
+}
+
+/**
+ * This will implement different programs and stuff alike
+ * 
+ * @param arguments (same as before an array of commands)
+ * @param background same as before a flag if it should run in the back
+ * 
+ */
+
+ void execute_program(char **arguments, int background){
+    pid_t pid;
+
+    //create child with fork
+    pid = fork();
+
+    if (pid<0){
+        //error forking
+        perror("fork failed");
+        return;
+    }else if (pid ==0){
+        //child 
+        execvp(arguments[0],arguments);
+
+        //fail of execvp
+        printf("Cannot exec");
+        exit(EXIT_FAILURE);
+    }else{
+        //this would be the parent process
+        printf("[%d] %s\n",pid,arguments[0]);
+
+        if (!background){
+            //wait for the processes not in the background to finish
+
+            int status;
+            waitpid(pid, &status,0);
+            //print the exit status
+            if (WIFEXITED(status)){
+                printf("[%d] %s exit %d\n", pid, arguments, WEXITSTATUS(status));
+            } 
+            else if (WIFSIGNALED(status)) {
+                printf("[%d] %s Killed (%d)\n", pid, arguments[0], WTERMSIG(status));
+            }
+            }
+        }
+    }
+/**
+ * Check if any background processes have completed
+ */
+void background_proc_check() {
+    int status;
+    pid_t pid;
+    
+    // Check for any completed background processes non-blocking
+    while ((pid = waitpid(-1, &status, WNOHANG)) > 0) {
+        // Print process exit status
+        if (WIFEXITED(status)) {
+            printf("[%d] Exit %d\n", pid, WEXITSTATUS(status));
+        } else if (WIFSIGNALED(status)) {
+            printf("[%d] Killed (%d)\n", pid, WTERMSIG(status));
+        }
+    }
+}
+ 
