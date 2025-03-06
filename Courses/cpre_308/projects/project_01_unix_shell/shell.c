@@ -56,7 +56,7 @@ int main (int arg_count, char **arg_array){
         if (fgets(input, sizeof(input), stdin)==NULL){
         break;
         }
-    
+        input[strcspn(input, "\n")] = '\0';
 
     //parse the input
     input_parse(input, args,&background);
@@ -94,11 +94,11 @@ int main (int arg_count, char **arg_array){
     int i =0;
     char *tok;
 
-    tok =strtok(input, "\t");
+    tok =strtok(input, " \t\n");
     //while loop to store token in the argument array
     while (tok !=NULL && i<max_arg-1){
         arguments[i++] = tok;
-        tok= strtok(NULL, "\t");
+        tok= strtok(NULL, " \t");
     }
 
     //Now need to check if the last is & to see for background processes
@@ -139,7 +139,8 @@ int main (int arg_count, char **arg_array){
         }
         return 1;
     } else if (strcmp(arguments[0], "cd") == 0) {
-        if (arguments[1] == NULL) {
+    
+        if (arguments[1] == NULL || strcmp(arguments[1],"~")==0) {
             // No argument, change to HOME directory
             char *home = getenv("HOME");
             if (home != NULL) {
@@ -183,7 +184,7 @@ int main (int arg_count, char **arg_array){
         execvp(arguments[0],arguments);
 
         //fail of execvp
-        printf("Cannot exec");
+        printf("Cannot exec %s: %s\n", arguments[0], strerror(errno));
         exit(EXIT_FAILURE);
     }else{
         //this would be the parent process
@@ -196,7 +197,7 @@ int main (int arg_count, char **arg_array){
             waitpid(pid, &status,0);
             //print the exit status
             if (WIFEXITED(status)){
-                printf("[%d] %s exit %d\n", pid, arguments, WEXITSTATUS(status));
+                printf("[%d] %s Exit %d\n", pid, arguments[0], WEXITSTATUS(status));
             } 
             else if (WIFSIGNALED(status)) {
                 printf("[%d] %s Killed (%d)\n", pid, arguments[0], WTERMSIG(status));
