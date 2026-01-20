@@ -1,0 +1,265 @@
+# AI-Powered SOC Dashboard - .gitignore
+
+# ===================================
+# Python / Backend
+# ===================================
+
+# Virtual Environment
+venv/
+env/
+ENV/
+.venv
+*.virtualenv
+
+# Python Cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+
+# Distribution / packaging
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# pyenv
+.python-version
+
+# ===================================
+# Node.js / Frontend
+# ===================================
+
+# Dependencies
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Production build
+/build
+/dist
+
+# Testing
+/coverage
+
+# Misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# ===================================
+# Environment Variables & Secrets
+# ===================================
+
+# Environment files
+.env
+.env.local
+.env.*.local
+*.env
+
+# Secrets
+secrets/
+*.key
+*.pem
+*.p12
+*.pfx
+credentials.json
+*.credentials
+
+# API Keys
+api_keys.txt
+config/secrets.yaml
+
+# ===================================
+# Database & Storage
+# ===================================
+
+# ChromaDB / Vector Database
+chroma_data/
+*.db
+*.sqlite
+*.sqlite3
+
+# PostgreSQL
+*.sql
+*.dump
+
+# Logs
+*.log
+logs/
+*.log.*
+
+# ===================================
+# AI/ML Models
+# ===================================
+
+# Ollama models (large files)
+models/
+*.gguf
+*.bin
+*.safetensors
+
+# Model checkpoints
+checkpoints/
+*.ckpt
+*.pth
+*.h5
+
+# ===================================
+# IDEs & Editors
+# ===================================
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# ===================================
+# Operating System
+# ===================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ===================================
+# Project Specific
+# ===================================
+
+# Wazuh credentials (NEVER commit these!)
+wazuh_credentials.txt
+wazuh_api_token.txt
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Docker
+docker-compose.override.yml
+.dockerignore
+
+# Data files
+data/
+*.csv
+*.json.backup
+
+# Screenshots / Media
+screenshots/
+demos/
+*.mp4
+*.mov
+*.gif
+# (Allow some demo media by creating a separate demo/ folder and excluding it from this rule)
+
+# Test data
+test_data/
+mock_data/
+
+# ===================================
+# Build Artifacts
+# ===================================
+
+# Compiled files
+*.pyc
+*.pyo
+*.so
+*.dll
+*.exe
+
+# Archives
+*.zip
+*.tar.gz
+*.rar
+
+# ===================================
+# CI/CD
+# ===================================
+
+# GitHub Actions artifacts
+.github/workflows/*.log
+
+# ===================================
+# Documentation (Optional - Uncomment if needed)
+# ===================================
+
+# Uncomment these if you don't want to track certain docs
+# docs/_build/
+# site/
+
+# ===================================
+# Keep These Files (Force Include)
+# ===================================
+
+# Make sure these are tracked even if they match patterns above
+!README.md
+!SETUP.md
+!ARCHITECTURE.md
+!FEATURES.md
+!RESUME_CONTENT.md
+!requirements.txt
+!package.json
+!.gitignore
